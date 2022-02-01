@@ -1,0 +1,69 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+<div id="left">
+    {% if show_news %}
+
+    <h3 class="announcement">{{show_news.announcement}}</h3>
+    {% if show_news.image %}
+    <a><img class="leftimg" src={{show_news.image.url}} width="900" height="500"></a>
+    {% endif %}
+    <br clear="all">
+
+    <p>{{show_news.text| linebreaks}}</p>
+
+
+    <br clear="all">
+    {% endif %}
+
+    {% if hot_news %}
+    {% for item in hot_news %}
+    <a href="{{item.get_absolute_url}}">— {{item.announcement}} {{item.date|date:"d F Y"}}</a><br>
+    <br>
+
+    {% endfor %}
+
+
+    {% endif %}
+
+
+    {% if request.user.is_authenticated %}
+
+    <form class="form-input"  action=" " method="post">
+        {% csrf_token %}
+        {{form}}
+        <button type="submit">ADD</button>
+    </form>
+    <br>
+
+
+    {% endif %}
+
+
+    {% for item in comments %}
+    <div class="material-list__item">
+        {% if item.user_name.image %}
+        <img class="leftimg" src={{item.user_name.image.url}} width="60" height="80">
+        {% else %}
+        <img class="leftimg" src="/media/img/users/no-photo-male.jpg" width="60" height="80">
+        {% endif %}
+
+        <p class="name">Username: {{item.user_name}}</p>
+        <p class="date">{{item.date}}</p>
+        <br clear="all">
+
+        <p>{{item.text}}</p>
+        {% if request.user|upper == item.user_name|upper %}
+        <br>
+        <a class="delete" href="del_comment/{{item.pk}}">DELITE</a>
+        <br clear="all">
+        {% endif %}
+    </div>
+    {% endfor %}
+    <br>
+
+
+</div>
+
+
+{% endblock %}
