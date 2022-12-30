@@ -47,6 +47,12 @@ class ShowArticle(DetailView, FormMixin):
         context['news'] = News.objects.all().filter(is_published=True)[:15]
         context['comments'] = Comments.objects.filter(head_news=context['object']).select_related('user_name')
         context['form'] = AddCommentForm()
+        print('lllllllllllllllllllll')
+        print(context['object'])
+        print(context)
+        print('lllllllllllllllllllll')
+
+
 
         return context
 
@@ -61,10 +67,22 @@ class ShowArticle(DetailView, FormMixin):
             return self.form_invalid(form)
 
     def form_valid(self, form):
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
         try:
+            print('00000000000000000000')
             self.object = form.save(commit=False)
+            print('1111111111111111111111')
             self.object.head_news = self.get_object()
+            print('2222222222222222222')
+            print(self.request.user)
+            print(NewUser.objects.all().filter(username=self.request.user))
             self.object.user_name = NewUser.objects.all().filter(username=self.request.user)[0]
+            print('333333333333333')
             self.object.save()
         except Exception as es:
             print(es)
@@ -94,13 +112,24 @@ class ShowPosts(DetailView, FormMixin):
         return reverse_lazy('news', kwargs={'post_slug': self.get_object().slug})
 
     def post(self, request, *args, **kwargs):
+        print('**************************')
+        print('**************************')
+
+        print('**************************')
+        print('**************************')
         form = AddCommentForm(request.POST)
+
         if form.is_valid():
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
 
     def form_valid(self, form):
+        print('**************************')
+        print('**************************')
+
+        print('**************************')
+        print('**************************')
         try:
             self.object = form.save(commit=False)
             self.object.news = self.get_object()
@@ -110,6 +139,8 @@ class ShowPosts(DetailView, FormMixin):
             print(es)
             print('_________________________')
         return super().form_valid(form)
+
+
 
 
 class HeadNewsCategory(ListView):
